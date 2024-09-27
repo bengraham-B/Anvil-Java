@@ -1,3 +1,4 @@
+import javax.swing.plaf.nimbus.State;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -99,5 +100,45 @@ public class Transaction {
     }
 }
 
+    public static void getTransactionsByCategory(Connection conn, String categoryID ,String userID){
+        ResultSet rs = null;
+        try{
+            String query = String.format("SELECT * FROM transaction WHERE user_id='%s' AND category_id='%s' ", userID, categoryID);
+            Statement statement = conn.createStatement();
+            rs = statement.executeQuery(query);
+
+            while(rs.next()){
+                System.out.println(rs.getString("details") + " --- " + rs.getString("amount"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void getCategorySum(Connection conn, String categoryID ,String userID){
+        try{
+            String query = String.format("SELECT SUM(transaction.amount) as category_total, category.category_details FROM transaction JOIN category ON transaction.category_id = category.category_id WHERE transaction.user_id='%s' AND transaction.category_id='%s' GROUP BY category.category_details", userID, categoryID);
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery(query);
+//            System.out.println(rs.getDouble("category_total"));
+
+            if(rs.next()){
+                double categoryTotal = rs.getDouble("category_total");
+                String categoryDetails = rs.getString("category_details");
+
+                if(rs.wasNull()){
+                    categoryTotal = 0.0;
+                }
+                System.out.println("Total for category [" + categoryDetails + "]: R"+categoryTotal);
+            } else {
+                System.out.println("No category total");
+
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
 }

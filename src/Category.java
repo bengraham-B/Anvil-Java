@@ -38,4 +38,20 @@ public class Category {
             throw new RuntimeException(e);
         }
     }
+
+    public static void showAllUserCategories(Connection conn, String userID){
+        try{
+            String query = String.format("SELECT category_details FROM category WHERE user_id='%s'", userID);
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+
+            while(resultSet.next()){
+                System.out.println("[Category]:  " + resultSet.getString("category_details"));
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

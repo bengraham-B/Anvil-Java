@@ -9,8 +9,13 @@ public class Main {
         DB db = new DB();
         Connection conn = db.connectDB("Anvil", "root", "root");
 
-        Transaction.insertTransaction(conn, "Test", 24000.00, "credit", "4fc66ff5-48d6-43fd-92bc-b6ce02d8d6e3", DateFunction.customDate(30, 9, 2024));
+//        Transaction.insertTransaction(conn, "Test", 24000.00, "credit", "4fc66ff5-48d6-43fd-92bc-b6ce02d8d6e3", DateFunction.customDate(30, 9, 2024));
         Transaction.getSumMonth(conn, 9);
+
+//        Transaction.getTransactionsByCategory(conn, "7c8971dd-20e7-42ef-a875-e93975638a67", "4fc66ff5-48d6-43fd-92bc-b6ce02d8d6e3");
+        Transaction.getCategorySum(conn, "7c8971dd-20e7-42ef-a875-e93975638a67", "4fc66ff5-48d6-43fd-92bc-b6ce02d8d6e3");
+
+        Category.showAllUserCategories(conn, "4fc66ff5-48d6-43fd-92bc-b6ce02d8d6e3");
 
 //        Category.createCategory(conn, "fees", "4fc66ff5-48d6-43fd-92bc-b6ce02d8d6e3");
 
