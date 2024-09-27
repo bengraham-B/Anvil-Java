@@ -20,11 +20,6 @@ public class Transaction {
     String monthName;
     int year;
 
-    // ID which will be added once recorded is created
-    // transaction_id;
-    // user_id;
-    // category_id;
-
     // Constructor
     public Transaction(String details, double amount, String transactionType, String userID, Date transactionDate, int day, int month, String monthName, int year) {
         this.details = details;
@@ -38,15 +33,24 @@ public class Transaction {
         this.year = year;
     }
 
-    public static void insertTransaction(Connection conn, String details, double amount, String transactionType, String userID, Date transactionDate, int day, int month, String monthName, int year) {
+    public static void insertTransaction(Connection conn, String details, double amount, String transactionType, String userID, Date transactionDate) {
         int dayBrokenDown = DateFunction.breakDownDate(transactionDate)[0];
         int monthBrokenDown = DateFunction.breakDownDate(transactionDate)[1];
         int yearBrokenDown = DateFunction.breakDownDate(transactionDate)[2];
 
+
         String []nameOfMonths = {"Jan", "Feb", "March", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"};
 
         try {
-            String query = String.format("INSERT INTO transaction(details, amount, transaction_date, user_id, transaction_type, day, month, month_name, year) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", details, amount, transactionDate, userID, transactionType, dayBrokenDown, monthBrokenDown, nameOfMonths[monthBrokenDown-1], yearBrokenDown);
+            double transactionTypeAmount = 0;
+
+            if(transactionType.equals("debit")){
+                transactionTypeAmount = amount * -1;
+            } else {
+                transactionTypeAmount = amount;
+            }
+
+            String query = String.format("INSERT INTO transaction(details, amount, transaction_date, user_id, transaction_type, day, month, month_name, year) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", details, transactionTypeAmount, transactionDate, userID, transactionType, dayBrokenDown, monthBrokenDown, nameOfMonths[monthBrokenDown-1], yearBrokenDown);
             Statement statement = conn.createStatement();
 
             int rowsInserted = statement.executeUpdate(query);
@@ -76,7 +80,7 @@ public class Transaction {
 
         // Process the result
         if (resultSet.next()) {
-            Double totalAmount = resultSet.getDouble("total_amount");
+            double totalAmount = resultSet.getDouble("total_amount");
             if (resultSet.wasNull()) {
                 totalAmount = 0.0; // Handle case where there are no transactions
             }
