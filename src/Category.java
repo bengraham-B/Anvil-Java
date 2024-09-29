@@ -54,4 +54,6 @@ public class Category {
             throw new RuntimeException(e);
         }
     }
+
+    //TODO Make a function which shows transactions which do not have a category
 }

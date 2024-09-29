@@ -10,9 +10,9 @@ public class DB {
 
             //^ Checking if connection is successful
             if(conn != null){
-                System.out.println("Connection Established");
+                System.out.println("Connection Established :)");
             } else {
-                System.out.println("Connection Failed");
+                System.out.println("Connection Failed :(");
             }
         } catch(Exception e){
             System.out.println(e);
@@ -20,6 +20,10 @@ public class DB {
 
         // Returning Connection Object
         return conn;
+
+    }
+
+    public void backDB(Connection conn){
 
     }
 }

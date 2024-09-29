@@ -1,12 +1,7 @@
-import javax.swing.plaf.nimbus.State;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.time.ZoneId;
 import java.util.Date;
-import java.time.LocalDate;
-
-//
 
 public class Transaction {
     String details;
@@ -21,8 +16,11 @@ public class Transaction {
     String monthName;
     int year;
 
+
+
+
     // Constructor
-    public Transaction(String details, double amount, String transactionType, String userID, Date transactionDate, int day, int month, String monthName, int year) {
+    public Transaction(String details, double amount, String transactionType, String userID, Date transactionDate, int day, int month, String monthName, int year, String []nameOfMonths) {
         this.details = details;
         this.amount = amount;
         this.transactionType = transactionType;
@@ -32,6 +30,7 @@ public class Transaction {
         this.month = month;
         this.monthName = monthName;
         this.year = year;
+
     }
 
     public static void insertTransaction(Connection conn, String details, double amount, String transactionType, String userID, Date transactionDate) {
@@ -43,9 +42,10 @@ public class Transaction {
         String []nameOfMonths = {"Jan", "Feb", "March", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"};
 
         try {
+            // If the type of transaction is a debit(expense) it will show as a negative number in the DB
             double transactionTypeAmount = 0;
 
-            if(transactionType.equals("debit")){
+            if(transactionType.equals("debit") || transactionType.equals("Debit")){
                 transactionTypeAmount = amount * -1;
             } else {
                 transactionTypeAmount = amount;
@@ -68,6 +68,7 @@ public class Transaction {
     }
 
     public static void getSumMonth(Connection conn, int month) {
+        String []nameOfMonths = {"Jan", "Feb", "March", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"};
     try {
         // Prepare the SQL query
         String query = String.format(
@@ -85,7 +86,7 @@ public class Transaction {
             if (resultSet.wasNull()) {
                 totalAmount = 0.0; // Handle case where there are no transactions
             }
-            System.out.printf("Total amount for month %d: R%.2f%n", month, totalAmount);
+            System.out.printf("Total amount for month [%s]: R%.2f%n",nameOfMonths[month-1], totalAmount);
         } else {
             System.out.printf("No transactions found for month %d.%n", month);
         }
@@ -140,5 +141,9 @@ public class Transaction {
         }
 
     }
+
+    // TODO: Get all credit transactions
+
+    // TODO: Get all debit transactions
 
 }
