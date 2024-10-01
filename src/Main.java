@@ -9,9 +9,15 @@ public class Main {
         DB db = new DB();
         Connection conn = db.connectDB("Anvil", "root", "root");
 
-        Transaction.insertTransaction(conn, "Airtime", 13, "debit", "4fc66ff5-48d6-43fd-92bc-b6ce02d8d6e3", DateFunction.customDate(29, 9, 2024));
-        Transaction.getSumMonth(conn, 9);
+        String userID = "4fc66ff5-48d6-43fd-92bc-b6ce02d8d6e3";
 
+        Transaction.insertTransaction(conn, "Deodorant", 24.99, "debit", userID, DateFunction.customDate(1, 10, 2024));
+//        Transaction.getSumMonth(conn, 9);
+
+//        Refund.insertRefundRecord(conn, "Milk", 39.99, 0, false, "Boss", "4fc66ff5-48d6-43fd-92bc-b6ce02d8d6e3");
+//        Refund.convertTransactionToRefundable(conn, "25ae8a85-659a-4d40-9fe8-93aec81c6edf", "Boss",userID);
+//            Refund.getRefundTransactions(conn, userID);
+//        Transaction.getTransactionsByType(conn, "credit", userID);
 //        Transaction.getTransactionsByCategory(conn, "7c8971dd-20e7-42ef-a875-e93975638a67", "4fc66ff5-48d6-43fd-92bc-b6ce02d8d6e3");
 //        Transaction.getCategorySum(conn, "7c8971dd-20e7-42ef-a875-e93975638a67", "4fc66ff5-48d6-43fd-92bc-b6ce02d8d6e3");
 

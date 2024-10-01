@@ -51,16 +51,18 @@ public class Transaction {
                 transactionTypeAmount = amount;
             }
 
-            String query = String.format("INSERT INTO transaction(details, amount, transaction_date, user_id, transaction_type, day, month, month_name, year) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", details, transactionTypeAmount, transactionDate, userID, transactionType, dayBrokenDown, monthBrokenDown, nameOfMonths[monthBrokenDown-1], yearBrokenDown);
+            String query = String.format("INSERT INTO transaction(details, amount, transaction_date, user_id, transaction_type, day, month, month_name, year) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s') RETURNING transaction_id", details, transactionTypeAmount, transactionDate, userID, transactionType, dayBrokenDown, monthBrokenDown, nameOfMonths[monthBrokenDown-1], yearBrokenDown);
             Statement statement = conn.createStatement();
 
-            int rowsInserted = statement.executeUpdate(query);
+
+            ResultSet resultSet = statement.executeQuery(query);
             // Provide feedback based on the result
-            if (rowsInserted > 0) {
-                System.out.println("Transaction inserted successfully.");
-            } else {
-                System.out.println("Transaction insertion failed.");
+            String transactionID = "";
+            while(resultSet.next()){
+                transactionID = resultSet.getString("transaction_id");
             }
+
+            System.out.println(transactionID);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -142,8 +144,18 @@ public class Transaction {
 
     }
 
-    // TODO: Get all credit transactions
-
-    // TODO: Get all debit transactions
+    // TODO: Get all credit and debit transactions
+    public static void getTransactionsByType(Connection conn, String type,String userID){
+        try{
+            String SQL = String.format("SELECT * FROM transaction WHERE transaction_type='%s' AND user_id='%s'", type, userID);
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(SQL);
+            while(resultSet.next()){
+                System.out.println(resultSet.getString("details") + " --- " + resultSet.getDouble("amount") + " --- " + resultSet.getDate("transaction_date"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
