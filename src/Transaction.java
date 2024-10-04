@@ -16,9 +16,6 @@ public class Transaction {
     String monthName;
     int year;
 
-
-
-
     // Constructor
     public Transaction(String details, double amount, String transactionType, String userID, Date transactionDate, int day, int month, String monthName, int year, String []nameOfMonths) {
         this.details = details;
@@ -144,7 +141,6 @@ public class Transaction {
 
     }
 
-    // TODO: Get all credit and debit transactions
     public static void getTransactionsByType(Connection conn, String type,String userID){
         try{
             String SQL = String.format("SELECT * FROM transaction WHERE transaction_type='%s' AND user_id='%s'", type, userID);
@@ -152,6 +148,20 @@ public class Transaction {
             ResultSet resultSet = statement.executeQuery(SQL);
             while(resultSet.next()){
                 System.out.println(resultSet.getString("details") + " --- " + resultSet.getDouble("amount") + " --- " + resultSet.getDate("transaction_date"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void getSumTransactionsPerDay(Connection conn, String userID, int month){
+        try {
+            String SQL = String.format("SELECT SUM(amount) as day_total, day FROM transaction WHERE month='%s' AND user_id='%s' GROUP BY day ORDER BY day ASC;", month,userID);
+            Statement statement = conn.createStatement();
+            ResultSet resultset = statement.executeQuery(SQL);
+
+            while(resultset.next()){
+                System.out.println(resultset.getInt("day") + "  " + resultset.getDouble("day_total"));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
